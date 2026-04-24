@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model rol {
+  id                       Int       @id @default(autoincrement())
+  nombre                   String    @unique @db.VarChar(100)
+  usuario_usuario_rolTorol usuario[] @relation("usuario_rolTorol")
+}
+
+model usuario {
+  carnet               String  @id @db.VarChar(9)
+  rol                  Int
+  email                String  @unique @db.VarChar(150)
+  estado               Boolean @default(true)
+  password             String  @db.VarChar(60)
+  nombre               String  @db.VarChar(250)
+  rol_usuario_rolTorol rol     @relation("usuario_rolTorol", fields: [rol], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "rol_usuario")
+}
