@@ -1,4 +1,4 @@
-export interface Comentario {
+export interface ComentarioModel {
   id: number;
   contenido: string;
   fecha: string;

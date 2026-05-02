@@ -31,19 +31,36 @@ const routes: RouteRecordRaw[] = [
         component: () => import('../views/Blog/Blogs.vue')
       },
       {
-        path: 'publicar',
-        name: 'crear publicacion',
-        component: () => import('../views/Foro/FormForo.vue')
-      },
-      {
         path: 'publicacion/:id([0-9]+)',
         name: 'publicacion',
         component: () => import('../views/PublicacionDetalles.vue')
       },
       {
-        path: 'publicar_blog',
-        name: 'Blog',
-        component: () => import('../views/Blog/FormBlog.vue')
+        path: 'mi_perfil',
+        name: 'Mi perfil',
+        component: () => import('../views/Perfil/SideBar.vue'),
+        children: [
+          {
+            path: 'mis_foros',
+            name: 'Mis foros',
+            component: () => import('../views/Perfil/MisForos.vue')
+          },
+          {
+            path: 'mis_blogs',
+            name: 'Mis blogs',
+            component: () => import('../views/Perfil/MisBlogs.vue')
+          },
+          {
+            path: 'crear_foro',
+            name: 'Publicacion',
+            component: () => import('../views/Foro/FormForo.vue')
+          },
+          {
+            path: 'crear_blog',
+            name: 'Publicacion blog',
+            component: () => import('../views/Blog/FormBlog.vue')
+          }
+        ]
       }
     ]
   },

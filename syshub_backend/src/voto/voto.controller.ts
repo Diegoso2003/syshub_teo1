@@ -18,4 +18,14 @@ export class VotoController {
   async delete(@Param('voto') voto: string, @GetUsuario('id') usuarioId: number) {
     return await this.votoService.delete(+voto, usuarioId);
   }
+
+  @Post('comentario')
+  async comentarioVoto(@Body() voto: VotoDto, @GetUsuario('id') usuarioId: number) {
+    return await this.votoService.votoComentario(voto, usuarioId);
+  }
+
+  @Delete('comentario/:voto')
+  async deleteComentario(@Param('voto') voto: string, @GetUsuario('id') usuarioId: number) {
+    return await this.votoService.deleteComentario(+voto, usuarioId);
+  }
 }

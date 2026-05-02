@@ -42,11 +42,11 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Comentario } from '../../models/Comentario';
+import type { ComentarioModel } from '../../models/ComentarioModel';
 import { eliminarVotoComentario, votarComentario } from '../../services/VotoService';
 
 const props = defineProps<{
-  comentario: Comentario
+  comentario: ComentarioModel
 }>()
 
 const fechaFormateada = computed(() => {

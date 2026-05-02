@@ -8,6 +8,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ForoModule } from './foro/foro.module';
 import { BlogModule } from './blog/blog.module';
 import { VotoModule } from './voto/voto.module';
+import { PerfilModule } from './perfil/perfil.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { VotoModule } from './voto/voto.module';
     ForoModule,
     BlogModule,
     VotoModule,
+    PerfilModule,
   ],
   controllers: [],
   providers: [PrismaService, BcryptService],

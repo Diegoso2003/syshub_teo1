@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, type Ref } from 'vue';
 import Boton from '../components/bases/Boton.vue';
+import { logout } from '../services/AuthService';
+import { useRouter } from 'vue-router';
 
 const open = ref(false)
+const router = useRouter();
 const dropdownContainer: Ref<HTMLElement | null> = ref(null)
 
 function toggleDropdown(): void {
@@ -17,6 +20,11 @@ function handleClickOutside(event: MouseEvent): void {
     if (dropdownContainer.value && !dropdownContainer.value.contains(event.target as Node)) {
         open.value = false
     }
+}
+
+function cerrarSesion(){
+    logout()
+    router.push('/login')
 }
 
 onMounted((): void => {
@@ -163,15 +171,15 @@ onUnmounted((): void => {
                             </li>
 
                             <li>
-                                <a class="flex flex-col items-center gap-1 text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75"
-                                    href="#">
+                                <router-link to="/inicio/mi_perfil/mis_foros" class="flex flex-col items-center gap-1 text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75"
+                                    >
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke-width="1.5" stroke="currentColor" class="size-6">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
                                     </svg>
                                     <span>Mi perfil</span>
-                                </a>
+                                </router-link>
                             </li>
                         </ul>
                     </nav>
@@ -180,7 +188,7 @@ onUnmounted((): void => {
                 <div class="flex items-center gap-4">
                     <div class="sm:flex sm:gap-4">
                         <div class="hidden sm:flex">
-                            <Boton label="cerrar sesión" type="button"></Boton>
+                            <Boton @click="cerrarSesion" label="cerrar sesión" type="button"></Boton>
                         </div>
                     </div>
 
