@@ -25,18 +25,22 @@ export class AuthService {
     if (!valido) {
       throw new UnauthorizedException('Email o contraseña incorrectos.');
     }
+    if (!usuario.estado) {
+      throw new UnauthorizedException('Usuario suspendido');
+    }
+    return this.login(usuario);
   }
 
-  login(usuario: { carnet: string; email: string; rol: number; estado: boolean; password: string; nombre: string }): {
-    access_token: string;
+  login(usuario: { id: number; email: string; rol: number; estado: boolean; password: string; nombre: string }): {
+    token: string;
   } {
     const payload: JwtPayload = {
       rol: usuario.rol,
-      carnet: usuario.carnet,
+      id: usuario.id,
     };
     const token: string = this.jwtService.sign(payload);
     return {
-      access_token: token,
+      token: token,
     };
   }
 }

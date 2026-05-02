@@ -1,16 +1,23 @@
-import api from '../api/client'
+import api from "../api/client";
+import type { Login } from "../models/Login";
+import type { Registro } from "../models/Registro";
 
-export const login = async (email: string, password: string) => {
-    const { data } = await api.post('/auth/login', { email, password })
+export const login = async (login: Login) => {
+  const { data } = await api.post("/auth/login", login);
 
-    localStorage.setItem('token', data.token)
-    return data
-}
+  localStorage.setItem("token", data.token);
+  return data;
+};
 
-export const registro = async (usuario: any) => {
-    return api.post('/auth/registro', usuario)
-}
+export const registro = async (usuario: Registro) => {
+  return api.post("/auth/registro", usuario);
+};
+
+export const token = () => {
+  const token = localStorage.getItem("token")!;
+  return JSON.parse(atob(token.split(".")[1]));
+};
 
 export const logout = () => {
-    localStorage.removeItem('token')
-}
+  localStorage.removeItem("token");
+};

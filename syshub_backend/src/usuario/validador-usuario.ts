@@ -2,11 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 
 export class ValidadorUsuario {
-  private regexDigitos = /^\d{9}$/;
-  private regexEmail = /^[\w-]+@[\w-]+(\.[a-zA-Z])+$/;
   public validar(usuario: CreateUsuarioDto) {
-    this.validarCarnet(usuario);
-    this.validarEmail(usuario);
     this.validarContraseña(usuario);
     this.validarNombre(usuario);
   }
@@ -26,23 +22,6 @@ export class ValidadorUsuario {
     }
     if (usuario.password !== usuario.confirPassword) {
       throw new BadRequestException('Las contraseñas no coinciden.');
-    }
-  }
-
-  private validarEmail(usuario: CreateUsuarioDto) {
-    if (!usuario.email || !this.regexEmail.test(usuario.email)) {
-      throw new BadRequestException('Ingresar un email valido');
-    }
-  }
-
-  private validarCarnet(usuario: CreateUsuarioDto) {
-    if (!usuario.carnet || !this.regexDigitos.test(usuario.carnet) || usuario.carnet[0] === '0') {
-      throw new BadRequestException('Ingresar un carnet valido');
-    }
-    const primeros4 = parseInt(usuario.carnet.substring(0, 4));
-    const añoActual = new Date().getFullYear();
-    if (primeros4 < 1989 || primeros4 > añoActual) {
-      throw new BadRequestException('Ingresar un carnet valido.');
     }
   }
 }

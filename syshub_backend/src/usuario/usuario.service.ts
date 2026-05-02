@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
@@ -15,11 +16,11 @@ export class UsuarioService {
   async create(createUsuarioDto: CreateUsuarioDto) {
     const validador = new ValidadorUsuario();
     validador.validar(createUsuarioDto);
-    await this.validarCarnetUnico(createUsuarioDto.carnet);
     await this.validarEmailUnico(createUsuarioDto.email);
     createUsuarioDto.password = await this.bcrypt.hashPassword(createUsuarioDto.password);
+    const { confirPassword, ...nuevo } = createUsuarioDto;
     await this.prisma.usuario.create({
-      data: createUsuarioDto,
+      data: nuevo,
     });
     return 'Usuario creado correctamente';
   }
@@ -46,15 +47,6 @@ export class UsuarioService {
     });
     if (usuario) {
       throw new ConflictException('Ya existe una cuenta enlazada con este correo electronico.');
-    }
-  }
-
-  async validarCarnetUnico(carnet: string) {
-    const usuario = await this.prisma.usuario.findUnique({
-      where: { carnet },
-    });
-    if (usuario) {
-      throw new ConflictException('Ya existe un usuario registrado con este número de carnet');
     }
   }
 }

@@ -5,9 +5,11 @@ import { AuthModule } from './auth/auth.module';
 import { BcryptService } from './bcrypt/bcrypt.service';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
+import { ForoModule } from './foro/foro.module';
+import { BlogModule } from './blog/blog.module';
 
 @Module({
-  imports: [UsuarioModule, AuthModule, ConfigModule.forRoot({ isGlobal: true }), PrismaModule],
+  imports: [UsuarioModule, AuthModule, ConfigModule.forRoot({ isGlobal: true }), PrismaModule, ForoModule, BlogModule],
   controllers: [],
   providers: [PrismaService, BcryptService],
 })

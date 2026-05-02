@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
   moduleFormat = "cjs"
 }
 
@@ -15,11 +15,135 @@ model rol {
 }
 
 model usuario {
-  carnet               String  @id @db.VarChar(9)
+  id                   Int          @id @default(autoincrement())
+  nombre               String       @db.VarChar(250)
   rol                  Int
-  email                String  @unique @db.VarChar(150)
-  estado               Boolean @default(true)
-  password             String  @db.VarChar(60)
-  nombre               String  @db.VarChar(250)
-  rol_usuario_rolTorol rol     @relation("usuario_rolTorol", fields: [rol], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "rol_usuario")
+  email                String       @unique @db.VarChar(150)
+  estado               Boolean      @default(true)
+  password             String       @db.VarChar(60)
+  comentario           comentario[]
+  curadoria            curadoria[]
+  guardado             guardado[]
+  post                 post[]
+  proyecto             proyecto[]
+  reporte              reporte[]
+  rol_usuario_rolTorol rol          @relation("usuario_rolTorol", fields: [rol], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "rol_usuario")
+  voto                 voto[]
+}
+
+model comentario {
+  id               Int          @id @default(autoincrement())
+  post_id          Int?
+  usuario_id       Int
+  padre_id         Int?
+  contenido        String
+  estado           Boolean      @default(true)
+  fecha            DateTime?    @default(now()) @db.Timestamp(6)
+  comentario       comentario?  @relation("comentarioTocomentario", fields: [padre_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_comentario_padre")
+  other_comentario comentario[] @relation("comentarioTocomentario")
+  post             post?        @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_comentario_post")
+  usuario          usuario      @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_comentario_usuario")
+  reporte          reporte[]
+  voto             voto[]
+}
+
+model curadoria {
+  id          Int       @id @default(autoincrement())
+  proyecto_id Int       @unique
+  auxiliar    Int
+  titulo      String?   @db.VarChar(150)
+  estado      Boolean   @default(true)
+  description String?
+  fecha       DateTime? @default(now()) @db.Timestamp(6)
+  usuario     usuario   @relation(fields: [auxiliar], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "auxiliar_curadoria")
+  proyecto    proyecto  @relation(fields: [proyecto_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "proyecto_fk")
+}
+
+model etiqueta {
+  id            Int             @id @default(autoincrement())
+  nombre        String          @unique @db.VarChar(100)
+  postcategoria postcategoria[]
+}
+
+model guardado {
+  id          Int       @id @default(autoincrement())
+  usuario_id  Int
+  post_id     Int?
+  proyecto_id Int?
+  fecha       DateTime? @default(now()) @db.Timestamp(6)
+  post        post?     @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_post_id")
+  proyecto    proyecto? @relation(fields: [proyecto_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_proyecto_id")
+  usuario     usuario   @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "guardados_usuario")
+}
+
+model post {
+  id            Int             @id @default(autoincrement())
+  usuario_id    Int
+  titulo        String?         @db.VarChar(200)
+  contenido     String
+  blog          Boolean
+  estado        Boolean         @default(true)
+  fecha         DateTime?       @default(now()) @db.Timestamp(6)
+  comentario    comentario[]
+  guardado      guardado[]
+  usuario       usuario         @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_posts_usuario")
+  postcategoria postcategoria[]
+  reporte       reporte[]
+  voto          voto[]
+}
+
+model postcategoria {
+  post_id     Int
+  category_id Int
+  etiqueta    etiqueta @relation(fields: [category_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pc_categoria")
+  post        post     @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_pc_post")
+
+  @@id([post_id, category_id])
+}
+
+model proyecto {
+  id          Int        @id @default(autoincrement())
+  usuario_id  Int
+  titulo      String     @db.VarChar(150)
+  description String
+  fecha       DateTime   @default(now()) @db.Timestamp(6)
+  tech_stack  String
+  estado      Boolean    @default(true)
+  curadoria   curadoria?
+  guardado    guardado[]
+  usuario     usuario    @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "guardados_usuario")
+}
+
+model reporte {
+  id            Int             @id @default(autoincrement())
+  usuario_id    Int?
+  post_id       Int?
+  comentario_id Int?
+  razon         String
+  estado        estado_reporte? @default(pendiente)
+  fecha         DateTime?       @default(now()) @db.Timestamp(6)
+  comentario    comentario?     @relation(fields: [comentario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_reporte_comentario")
+  post          post?           @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_reporte_post")
+  usuario       usuario?        @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_reporte_usuario")
+}
+
+model voto {
+  id            Int         @id @default(autoincrement())
+  usuario_id    Int?
+  post_id       Int?
+  comentario_id Int?
+  fecha         DateTime?   @default(now()) @db.Timestamp(6)
+  valor         Int         @db.SmallInt
+  comentario    comentario? @relation(fields: [comentario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_votos_comentario")
+  post          post?       @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_votos_post")
+  usuario       usuario?    @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_votos_usuario")
+
+  @@unique([usuario_id, post_id], map: "unique_voto_post")
+  @@unique([usuario_id, comentario_id], map: "unique_voto_comentario")
+}
+
+enum estado_reporte {
+  pendiente
+  revisada
+  rechazada
 }
