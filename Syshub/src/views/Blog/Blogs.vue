@@ -13,7 +13,6 @@ async function cargarPosts(pagina: number) {
     try {
         const response = await blogsPaginados(pagina)
         posts.value = response.data;
-        console.log(posts.value)
     } catch (error: any) {
         const mensaje: string = error.message || "error al iniciar sesión intente más tarde"
         alert(mensaje)

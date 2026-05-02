@@ -36,9 +36,9 @@ const routes: RouteRecordRaw[] = [
         component: () => import('../views/Foro/FormForo.vue')
       },
       {
-        path: 'publicacion/:id',
+        path: 'publicacion/:id([0-9]+)',
         name: 'publicacion',
-        component: () => import('../views/PublicacionVista.vue')
+        component: () => import('../views/PublicacionDetalles.vue')
       },
       {
         path: 'publicar_blog',

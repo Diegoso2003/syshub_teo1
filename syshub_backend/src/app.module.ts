@@ -7,9 +7,18 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { ForoModule } from './foro/foro.module';
 import { BlogModule } from './blog/blog.module';
+import { VotoModule } from './voto/voto.module';
 
 @Module({
-  imports: [UsuarioModule, AuthModule, ConfigModule.forRoot({ isGlobal: true }), PrismaModule, ForoModule, BlogModule],
+  imports: [
+    UsuarioModule,
+    AuthModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    PrismaModule,
+    ForoModule,
+    BlogModule,
+    VotoModule,
+  ],
   controllers: [],
   providers: [PrismaService, BcryptService],
 })
